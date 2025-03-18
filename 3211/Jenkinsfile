@@ -14,6 +14,7 @@ pipeline {
         RELEASE_GITHUB_URL = 'https://github.com/hep7/kubernetes-anotherclass-sprint3.git'
 
         // App용 Github - Api-Tester App 소스코드를 Fork 하신 분
+        //https://github.com/hep7/kubernetes-anotherclass-api-tester.git
         APP_GITHUB_URL = 'https://github.com/hep7/kubernetes-anotherclass-api-tester.git'
         APP_VERSION = '3.0.0'
 
@@ -59,8 +60,15 @@ pipeline {
 
         stage('컨테이너 업로드') {
             steps {
+
                 // DockerHub로 이미지 업로드
                 script{
+
+                    //중요 데이터 암호화 관리
+                    withCredentials([usernamePassword(credentialsId: 'docker_password', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                        sh "echo " + '${PASSWORD}' + " | docker login -u " + '${USERNAME}' + " --password-stdin"
+                    }
+
                     if (DOCKERHUB_USERNAME == "1pro") {
                         echo "docker push ${DOCKERHUB_USERNAME}/api-tester:${APP_VERSION}"
                     } else {
