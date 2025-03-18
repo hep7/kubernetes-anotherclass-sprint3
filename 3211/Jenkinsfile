@@ -76,6 +76,12 @@ pipeline {
                     }
                 }
             }
+
+            post {
+                always {
+                    sh "docker logout"
+                }
+            }
         }
 
         stage('쿠버네티스 배포') {
