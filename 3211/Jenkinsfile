@@ -23,12 +23,6 @@ pipeline {
     
     stages {
 
-        stage('Cleanup') {
-            steps {
-                sh 'rm -rf .git'
-            }
-        }
-
         stage('소스파일 체크아웃') {
             steps {
                 // 본인의 username으로 하실 분은 수정해주세요.
@@ -44,25 +38,12 @@ pipeline {
             }
         }
 
-        stage('Check Git Remote') {
-            steps {
-                sh 'git remote -v'
-            }
-        }
-
-
         stage('릴리즈파일 체크아웃') {
             steps {
                 checkout scmGit(branches: [[name: '*/main']],
                     extensions: [[$class: 'SparseCheckoutPaths',
                     sparseCheckoutPaths: [[path: "/${CLASS_NUM}"]]]],
 					userRemoteConfigs: [[url: "${RELEASE_GITHUB_URL}"]])
-            }
-        }
-
-        stage('Check Git Remote') {
-            steps {
-                sh 'git remote -v'
             }
         }
 
