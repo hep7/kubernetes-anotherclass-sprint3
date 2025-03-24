@@ -54,6 +54,13 @@ pipeline {
 
         stage('컨테이너 업로드') {
             steps {
+
+                //중요 데이터 암호화 관리
+                withCredentials([usernamePassword(credentialsId: 'docker_password', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                    sh "echo " + '${PASSWORD}' + " | docker login -u " + '${USERNAME}' + " --password-stdin"
+                }
+
+
                 // DockerHub로 이미지 업로드
                 script{
                     if (DOCKERHUB_USERNAME == "1pro") {
